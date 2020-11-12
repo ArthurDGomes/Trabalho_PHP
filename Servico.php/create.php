@@ -1,8 +1,40 @@
 
 
 <?php
-require '../Funcionario.php/banco.php';
 //Acompanha os erros de validação
+require 'banco.php';
+ 
+    $pdo = Banco::conectar();
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $sql = "SELECT * FROM funcionario ";
+    $q = $pdo->prepare($sql);//preparando a query 
+    $q->execute(array($id));// executa a query
+    $data = $q->fetch(PDO::FETCH_ASSOC); //pesquisa os dados e joga na variavel data
+    
+    $funcionarios=[];
+    foreach($pdo->query($sql) as $row=>$value)
+                        {
+                            $funcionarios[$value['id']]['id'] = $value['id'] ;  
+                            $funcionarios[$value['id']]['nome'] = $value['nome'] ;
+                        }
+    Banco::desconectar();
+
+
+    $pdo = Banco::conectar();
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $sql = "SELECT * FROM cliente ";
+    $q = $pdo->prepare($sql);//preparando a query 
+    $q->execute(array($id));// executa a query
+    $data = $q->fetch(PDO::FETCH_ASSOC); //pesquisa os dados e joga na variavel data
+    
+    $clientes=[];
+    foreach($pdo->query($sql) as $row=>$value)
+                        {
+                            $clientes[$value['id']]['id'] = $value['id'] ;  
+                            $clientes[$value['id']]['nome'] = $value['nome'] ;
+                        }
+    Banco::desconectar();
+
 
 // Processar so quando tenha uma chamada post
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -14,20 +46,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if (!empty($_POST)) {
         $validacao = True;
-        $novoUsuario = False;
-        if (!empty($_POST['funcionario'])) {
-            $funcionario = $_POST['funcionario'];
-        } else {
-            $funcionarioErro = 'Por favor escolha o seu funcionario!';
-            $validacao = False;
+        if( $_POST['funcionarios']=='0' ){?>
+            <script>
+           alert('Escolha um Funcionário!');
+           </script><?php
+        }
+        else{
+            $novoUsuario = False;
+            if (!empty($_POST['funcionarios'])) {
+                $funcionario = $_POST['funcionarios'];
+            } 
         }
 
-
-        if (!empty($_POST['cliente'])) {
-            $cliente = $_POST['cliente'];
-        } else {
-            $clienteErro = 'Por favor digite o nome do cliente';
-            $validacao = False;
+        if( $_POST['clientes']=='0'){?>
+            <script>
+           alert('Escolha um Cliente!');
+           </script><?php
+        }
+        else{if(!empty($_POST['clientes'])) {
+            $cliente = $_POST['clientes'];
+        } 
         }
 
 
@@ -91,22 +129,32 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <div class="control-group  <?php echo !empty($funcionarioErro) ? 'error ' : ''; ?>">
                         <label class="control-label">Funcionário</label>
                         <div class="controls">
-                            <input size="50" class="form-control" name="funcionario" type="text" placeholder="Funcionário"
-                                   value="<?php echo !empty($funcionario) ? $funcionario : ''; ?>">
-                            <?php if (!empty($funcionarioErro)): ?>
-                                <span class="text-danger"><?php echo $funcionarioErro; ?></span>
-                            <?php endif; ?>
+                        <select name="funcionarios">
+                        <option value="0" selected>Funcionários</option>
+                           <?php 
+                            for($i=1; count($funcionarios)>=$i;$i++) { print_r($funcionarios[$i]);?>
+                               
+                               <option value="<?php echo $funcionarios[$i]['nome']; ?>" ><?php echo $funcionarios[$i]['nome']; ?></option>
+                                    <?php           
+                            } 
+                                                                ?>
+                        </select>
                         </div>
                     </div>
 
                     <div class="control-group <?php echo !empty($clienteErro) ? 'error ' : ''; ?>">
                         <label class="control-label">Cliente</label>
                         <div class="controls">
-                            <input size="80" class="form-control" name="cliente" type="text" placeholder="Cliente"
-                                   value="<?php echo !empty($cliente) ? $cliente : ''; ?>">
-                            <?php if (!empty($emailErro)): ?>
-                                <span class="text-danger"><?php echo $clienteErro; ?></span>
-                            <?php endif; ?>
+                        <select name="clientes">
+                        <option value="0" selected>Cliente</option>
+                           <?php 
+                            for($i=1; count($clientes)>=$i;$i++) { print_r($clientes[$i]);?>
+                               
+                               <option value="<?php echo $clientes[$i]['nome']; ?>" ><?php echo $clientes[$i]['nome']; ?></option>
+                                    <?php           
+                            } 
+                                                                ?>
+                        </select>
                         </div>
                     </div>
 

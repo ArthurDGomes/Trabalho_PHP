@@ -1,0 +1,28 @@
+*{
+    margin: 0px;
+    padding: 0%;
+}
+
+body{
+    background-color: #BFEFFF;
+    font-family: Bradley Hand, cursive;
+}
+
+
+input{
+    display: block ;
+    height:  55px;
+    width: 400px;
+    margin: 10px;
+    border-radius:30px ;
+    border: 1px solid black;
+    font-size: 16pt;
+    padding: 10px 20px;
+}
+
+div#corpo-form{
+    background-color:#F0FFFF;
+    width: 420px;
+    margin: 280px auto 0px auto;
+    border-radius:10px ;
+}
